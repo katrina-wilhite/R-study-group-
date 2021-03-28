@@ -1,0 +1,43 @@
+```{r}
+
+#Step 1: Install or open the following libraries: 
+##googlesheets4 (This is so you can use data from your Google Sheet in R Studio)
+##dplyr (This includes a bunch of functions to manipulate your data. For example, arraning or sorting data.)
+##kableExtra (This has all the fancy functions to create a cool table)install.packages("kableExtra", "googlesheets4", "dplyr")
+
+install.packages("kableExtra")
+
+#Step 2: Open the above libraries 
+
+library(googlesheets4)
+library(dplyr)
+library(kableExtra)
+
+
+```
+
+
+``` {r}
+#Read Specific Sheet from Google Sheets
+##For my systematic review, I had multiple sheets on my main Google Sheet for each reviewer. Then I created a "Master Sheet" which had all the data in one place after consensus was reached. The googlesheets4 package allows you to read the data directly from Google Sheets. Since I had multiple sheets I had to tell it to look for something very specific. I did the following:
+###I used "df" to name my dataset, this is pretty typical in R. 
+###The "read_sheet" functions tell R to read data from Google Sheets.
+###argument 1: put in the URL from the sheet you want to use, argument 2: in parenthesis write the title of the specific sheet name you want to read, argument 3: identify which number the specific sheet is
+
+df <- read_sheet("https://docs.google.com/spreadsheets/d/1I3Aqk2sixdo_txX8vGk9hUYZXwR29nFPUzTmNY41A_k/edit#gid=825760932", "Master Sheet", sheet = 7)
+
+#R will need permission to access your Google Sheet, so the first time you do this follow the prompts to grant it access. Every time after that, you'll have to seect your email address in the console to continue. (R will prompt you to do this)
+```
+
+```{r}
+#Next, I told R which data I wanted to use (select), how I wanted it ordered (arrange), and then used the kbl() function to create a table. kable_classic is how I decided to style mine. There are a lot of different options you can use. For this particular talbe I used Cambria font, I made the lines striped, bolded the headers, and made the columns closer together. You can really do whatever you want. I put a link to a "How to Make Beautiful Tables in R" so you can explore other options that may be more suitable for you. 
+
+df %>%
+  select('Outcome', 'First Author', 'Population') %>%
+  arrange(`Outcome`,`First Author`)%>%
+  kbl() %>%
+  kable_classic(html_font = "Cambria", c("striped", "condensed"))%>%
+  kable_styling(fixed_thead = T)%>%
+  row_spec(0, bold = T)
+
+```
